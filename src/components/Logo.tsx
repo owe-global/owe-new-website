@@ -31,7 +31,7 @@ export default function Logo({ className = "", variant = "dark", size = "md" }: 
   return (
     <div className={`flex items-center ${className}`}>
       <img 
-        src="/logo.png" 
+        src={variant === "light" ? "/logo-light.png" : "/logo.png"} 
         alt="Open World Education" 
         className={`${currentSize.svg} object-contain`} 
       />
