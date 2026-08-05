@@ -1,20 +1,39 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Open World Education Website
 
-# Run and deploy your AI Studio app
+Welcome to the official website repository for **Open World Education**, Bangladesh's premier agency offering transparent and comprehensive global admissions, scholarship planning, and visa support.
 
-This contains everything you need to run your app locally.
+## Overview
+This is a modern, high-fidelity single-page application (SPA) built with:
+- **React 19**
+- **Vite**
+- **Tailwind CSS v4**
+- **Framer Motion** for smooth scroll reveals and UI animations
+- **Lucide React** for modern iconography
 
-View your app in AI Studio: https://ai.studio/apps/31992f1f-4336-4d36-9c41-be925db83821
+The website includes custom components for:
+- Eligibility predictions & university matching
+- Automated booking systems integrated with Google Sheets
+- Premium visual aesthetic with responsive layouts and hover animations
 
-## Run Locally
+## Getting Started
 
-**Prerequisites:**  Node.js
+To run this project locally:
 
+1. Install the dependencies:
+   ```bash
+   npm install
+   ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+2. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+
+## Integration Environment Variables
+If you need to connect forms to your Google Sheets backend, create a `.env` file in the root directory:
+```
+VITE_GOOGLE_SHEET_URL=your_google_sheet_webapp_url
+VITE_ELIGIBILITY_SHEET_URL=your_eligibility_sheet_webapp_url
+```
