@@ -1,0 +1,12 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    /* We don't set body height to 500vh anymore, the tall content handles it */
+}
+
+/* Hide scrollbar for a cleaner animation experience (optional but nice) */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}

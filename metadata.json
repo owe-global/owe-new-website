@@ -1,0 +1,6 @@
+{
+  "name": "Open World Education",
+  "description": "Premium study abroad student consultancy platform in Bangladesh for global education counseling, university admission, and visa assistance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
