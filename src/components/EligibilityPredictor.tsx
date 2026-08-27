@@ -8,9 +8,9 @@ interface EligibilityPredictorProps {
 export default function EligibilityPredictor({ onSuccess }: EligibilityPredictorProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    academicLevel: "masters",
-    gpaScale: "4.0",
-    gpaValue: "3.5",
+    academicLevel: "hsc",
+    gpaScale: "5.0",
+    gpaValue: "4.5",
     englishTest: "ielts",
     englishScore: "6.5",
     destination: "uk",
@@ -31,6 +31,29 @@ export default function EligibilityPredictor({ onSuccess }: EligibilityPredictor
 
   const handleInputChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAcademicLevelChange = (levelId: string) => {
+    setFormData((prev) => {
+      let newScale = prev.gpaScale;
+      let newGpa = prev.gpaValue;
+
+      if (levelId === "hsc") {
+        newScale = "5.0";
+        if (parseFloat(newGpa) > 5.0) newGpa = "5.0";
+        else if (!newGpa || parseFloat(newGpa) < 2.0) newGpa = "4.5";
+      } else if (levelId === "masters") {
+        newScale = "4.0";
+        if (parseFloat(newGpa) > 4.0) newGpa = "3.5";
+      }
+
+      return {
+        ...prev,
+        academicLevel: levelId,
+        gpaScale: newScale,
+        gpaValue: newGpa,
+      };
+    });
   };
 
   const nextStep = () => {
@@ -126,6 +149,7 @@ export default function EligibilityPredictor({ onSuccess }: EligibilityPredictor
       if (scriptURL) {
         // Map raw values to human-readable labels
         const levelMap: Record<string, string> = {
+          "hsc": "HSC / Higher Secondary",
           "bachelors": "Bachelors / Undergraduate",
           "masters": "Masters / Postgraduate",
           "diploma": "Advanced Diploma",
@@ -243,18 +267,18 @@ export default function EligibilityPredictor({ onSuccess }: EligibilityPredictor
                   <div className="space-y-6 animate-fade-in">
                     <div>
                       <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        1. What is your desired level of study?
+                        1. What is your current academic qualification?
                       </label>
                       <div className="grid grid-cols-2 gap-3">
                         {[
-                          { id: "bachelors", label: "Bachelors / Undergraduate", desc: "For HSC/A-Levels/Diploma grads" },
-                          { id: "masters", label: "Masters / Postgraduate", desc: "For Honors/Bachelors graduates" },
-                          { id: "diploma", label: "Advanced Diploma", desc: "For intermediate/practical streams" },
-                          { id: "phd", label: "PhD / Research Degree", desc: "For academic researchers" },
+                          { id: "hsc", label: "HSC / Higher Secondary", desc: "Applying for Bachelors (Scale 5.0)" },
+                          { id: "masters", label: "Masters / Postgraduate", desc: "For Honors/Bachelors grads (Scale 4.0)" },
+                          { id: "bachelors", label: "Bachelors / Undergraduate", desc: "For transfer or postgrad entry" },
+                          { id: "diploma", label: "Advanced Diploma", desc: "For practical/polytechnic streams" },
                         ].map((level) => (
                           <div
                             key={level.id}
-                            onClick={() => handleInputChange("academicLevel", level.id)}
+                            onClick={() => handleAcademicLevelChange(level.id)}
                             className={`p-4 rounded-xl border-2 text-left cursor-pointer transition-all ${
                               formData.academicLevel === level.id
                                 ? "border-blue-500 bg-blue-50/50"
@@ -281,10 +305,21 @@ export default function EligibilityPredictor({ onSuccess }: EligibilityPredictor
                               handleInputChange("gpaScale", e.target.value);
                               handleInputChange("gpaValue", e.target.value === "4.0" ? "3.5" : "4.5");
                             }}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-800"
+                            disabled={formData.academicLevel === "hsc" || formData.academicLevel === "masters"}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-800 disabled:opacity-80 disabled:cursor-not-allowed"
                           >
-                            <option value="4.0">GPA out of 4.0</option>
-                            <option value="5.0">GPA out of 5.0</option>
+                            {formData.academicLevel === "hsc" && (
+                              <option value="5.0">GPA out of 5.0</option>
+                            )}
+                            {formData.academicLevel === "masters" && (
+                              <option value="4.0">GPA out of 4.0</option>
+                            )}
+                            {formData.academicLevel !== "hsc" && formData.academicLevel !== "masters" && (
+                              <>
+                                <option value="4.0">GPA out of 4.0</option>
+                                <option value="5.0">GPA out of 5.0</option>
+                              </>
+                            )}
                           </select>
                         </div>
                         <div className="w-2/3">
