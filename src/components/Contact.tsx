@@ -27,10 +27,14 @@ export default function Contact() {
     }
     setSubmitting(true);
 
-    const scriptURL = import.meta.env.VITE_GOOGLE_SHEET_URL;
+    const DEFAULT_FORM_SHEET_URL =
+      "https://script.google.com/macros/s/AKfycbwBKVtW-24pxCu9ei_3DvOi_bA3IYapm-VLCOf-7H14V2yu6WqOizbS4bxm9EgE-daZ/exec";
+
+    const scriptURL = import.meta.env.VITE_GOOGLE_SHEET_URL || DEFAULT_FORM_SHEET_URL;
     
     if (scriptURL) {
       const payload = {
+        sheetName: "FORM",
         fullName: formData.name,
         emailAddress: formData.email,
         mobileNumber: formData.phone,

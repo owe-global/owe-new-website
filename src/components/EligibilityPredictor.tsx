@@ -118,7 +118,11 @@ export default function EligibilityPredictor({ onSuccess }: EligibilityPredictor
       setSubmitting(false);
 
       // Send lead to Google Sheets
-      const scriptURL = import.meta.env.VITE_ELIGIBILITY_SHEET_URL;
+      const DEFAULT_ELIGIBILITY_SHEET_URL =
+        "https://script.google.com/macros/s/AKfycbwBKVtW-24pxCu9ei_3DvOi_bA3IYapm-VLCOf-7H14V2yu6WqOizbS4bxm9EgE-daZ/exec";
+
+      const scriptURL =
+        import.meta.env.VITE_ELIGIBILITY_SHEET_URL || DEFAULT_ELIGIBILITY_SHEET_URL;
       if (scriptURL) {
         // Map raw values to human-readable labels
         const levelMap: Record<string, string> = {
@@ -153,6 +157,7 @@ export default function EligibilityPredictor({ onSuccess }: EligibilityPredictor
         };
 
         const payload = {
+          sheetName: "Eligible",
           fullName: formData.name,
           emailAddress: formData.email,
           mobileNumber: formData.phone,

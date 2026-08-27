@@ -6,9 +6,10 @@ interface NavbarProps {
   activePage: string;
   onBookClick: () => void;
   onAssessClick: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export default function Navbar({ activePage, onBookClick, onAssessClick }: NavbarProps) {
+export default function Navbar({ activePage, onBookClick, onAssessClick, onNavigate }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -28,17 +29,23 @@ export default function Navbar({ activePage, onBookClick, onAssessClick }: Navba
   }, [activePage]);
 
   const menuItems = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Service", href: "#services" },
-    { label: "Eligibility", href: "#eligibility" },
-    { label: "Destinations", href: "#destinations" },
-    { label: "Our Success Stories", href: "#testimonials" },
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Service", href: "/services" },
+    { label: "Eligibility", href: "/eligibility" },
+    { label: "Destinations", href: "/destinations" },
+    { label: "Our Success Stories", href: "/testimonials" },
+    { label: "Become Partner", href: "/partner" },
   ];
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
-    window.location.hash = href;
+    const pageName = href.replace(/^[\/#]/, "") || "home";
+    if (onNavigate) {
+      onNavigate(pageName);
+    } else {
+      window.location.hash = href;
+    }
   };
 
   return (
@@ -59,7 +66,7 @@ export default function Navbar({ activePage, onBookClick, onAssessClick }: Navba
         {/* Center Navigation Links */}
         <div className="hidden md:flex items-center justify-center flex-1 mx-8 gap-8">
           {menuItems.map((item) => {
-            const itemPage = item.href.replace("#", "");
+            const itemPage = item.href.replace(/^[\/#]/, "") || "home";
             const isActive = activePage === itemPage;
             return (
               <button
@@ -112,7 +119,7 @@ export default function Navbar({ activePage, onBookClick, onAssessClick }: Navba
       {isOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-slate-200 shadow-xl py-4 px-6 space-y-3 text-slate-900">
           {menuItems.map((item) => {
-            const itemPage = item.href.replace("#", "");
+            const itemPage = item.href.replace(/^[\/#]/, "") || "home";
             const isActive = activePage === itemPage;
             return (
               <button

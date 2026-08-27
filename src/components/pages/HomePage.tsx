@@ -4,6 +4,7 @@ import Services from "../Services";
 import Destinations from "../Destinations";
 import EligibilityPredictor from "../EligibilityPredictor";
 import Testimonials from "../Testimonials";
+import PartnerSection from "../PartnerSection";
 import Contact from "../Contact";
 import ScrollReveal from "../ScrollReveal";
 
@@ -44,7 +45,12 @@ export default function HomePage({ onBookClick, onAssessClick }: HomePageProps) 
         <Testimonials />
       </ScrollReveal>
 
-      {/* 7. Contact Us */}
+      {/* 7. Partner / Agent Application Form Section */}
+      <ScrollReveal>
+        <PartnerSection />
+      </ScrollReveal>
+
+      {/* 8. Contact Us */}
       <ScrollReveal>
         <Contact />
       </ScrollReveal>

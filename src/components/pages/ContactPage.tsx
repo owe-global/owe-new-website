@@ -29,7 +29,7 @@ export default function ContactPage() {
       {/* Frequently Asked Questions section */}
       <section className="py-20 bg-slate-50 border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          
+
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-bold text-blue-700 bg-blue-100/60 px-3 py-1 rounded-full uppercase tracking-wider">
               Student Helpdesk
@@ -44,8 +44,8 @@ export default function ContactPage() {
 
           <div className="space-y-6">
             {faqList.map((faq, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-2 hover:border-blue-200 transition-all"
               >
                 <div className="flex gap-3 items-start">
@@ -70,7 +70,7 @@ export default function ContactPage() {
                 Open Saturday - Thursday (10:00 AM - 6:30 PM). Friday Closed.
               </p>
             </div>
-            <a 
+            <a
               href="#home"
               onClick={(e) => {
                 e.preventDefault();

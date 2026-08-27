@@ -14,19 +14,38 @@ import EligibilityPage from "./components/pages/EligibilityPage";
 import DestinationsPage from "./components/pages/DestinationsPage";
 import SuccessPage from "./components/pages/SuccessPage";
 import ContactPage from "./components/pages/ContactPage";
+import PartnerPage from "./components/pages/PartnerPage";
 
 export default function App() {
   const [schedulerOpen, setSchedulerOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Parse hash location dynamically
-  const [currentPage, setCurrentPage] = useState(() => {
-    const hash = window.location.hash;
-    const page = hash ? hash.replace("#", "") : "home";
-    if (page === "assess") return "eligibility";
-    return ["home", "about", "services", "eligibility", "destinations", "testimonials", "contact"].includes(page) ? page : "home";
-  });
+  // Helper to parse current page from window location (supports both /partner and #partner)
+  const parsePageFromUrl = () => {
+    const rawPath = window.location.pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
+    const rawHash = window.location.hash.replace("#", "").toLowerCase();
+    const raw = rawPath || rawHash || "home";
+
+    if (raw === "assess") return "eligibility";
+    if (raw === "agent") return "partner";
+    if (raw === "service") return "services";
+    if (["home", "about", "services", "eligibility", "destinations", "testimonials", "contact", "partner"].includes(raw)) {
+      return raw;
+    }
+    return "home";
+  };
+
+  const [currentPage, setCurrentPage] = useState(parsePageFromUrl);
+
+  const navigateTo = (page: string) => {
+    const targetPath = page === "home" ? "/" : `/${page}`;
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({}, "", targetPath);
+    }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,28 +60,24 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      const page = hash ? hash.replace("#", "") : "home";
-
-      if (["home", "about", "services", "eligibility", "destinations", "testimonials", "contact"].includes(page)) {
-        setCurrentPage(page);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else if (page === "assess") {
-        setCurrentPage("eligibility");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        // Fallback to home page
-        setCurrentPage("home");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+    const handleUrlChange = () => {
+      const page = parsePageFromUrl();
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    // Initialize checking hash on mount
-    handleHashChange();
+    // Synchronize initial URL path if accessed via hash or alias
+    const initialPage = parsePageFromUrl();
+    if (initialPage !== "home" && window.location.pathname === "/") {
+      window.history.replaceState({}, "", `/${initialPage}`);
+    }
 
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
+    window.addEventListener("popstate", handleUrlChange);
+    window.addEventListener("hashchange", handleUrlChange);
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+      window.removeEventListener("hashchange", handleUrlChange);
+    };
   }, []);
 
   const openScheduler = (countryName: string = "") => {
@@ -83,7 +98,7 @@ export default function App() {
   };
 
   const handleAssessClick = () => {
-    window.location.hash = "#assess";
+    navigateTo("eligibility");
   };
 
   const renderPageContent = () => {
@@ -105,6 +120,8 @@ export default function App() {
         return <SuccessPage />;
       case "contact":
         return <ContactPage />;
+      case "partner":
+        return <PartnerPage />;
       case "home":
       default:
         return (
@@ -124,6 +141,7 @@ export default function App() {
         activePage={currentPage}
         onBookClick={() => openScheduler()}
         onAssessClick={handleAssessClick}
+        onNavigate={navigateTo}
       />
 
       {/* Main Content Area with Page Switcher Animation */}

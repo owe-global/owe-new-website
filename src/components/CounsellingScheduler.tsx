@@ -40,7 +40,10 @@ export default function CounsellingScheduler({
     }
     setSubmitting(true);
 
-    const scriptURL = import.meta.env.VITE_GOOGLE_SHEET_URL;
+    const DEFAULT_COUNSELLING_SHEET_URL =
+      "https://script.google.com/macros/s/AKfycbxi3eqgjxE0rqmG_4B5MXpLMyrPhgA2mMqwPuknkJKWwx6Rn1GhPXaWT1KQRtkwQVppZQ/exec";
+
+    const scriptURL = import.meta.env.VITE_GOOGLE_SHEET_URL || DEFAULT_COUNSELLING_SHEET_URL;
 
     const payload = {
       fullName: formData.name,
@@ -54,24 +57,18 @@ export default function CounsellingScheduler({
     };
 
     try {
-      if (!scriptURL) {
-        throw new Error("Google Sheet URL is missing.");
+      if (scriptURL) {
+        await fetch(scriptURL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8', 
+          }
+        });
+        setSubmitting(false);
+        setSuccess(true);
       }
-
-      const response = await fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8', 
-        }
-      });
-      
-      // When using 'no-cors', the response is opaque, meaning response.ok is always false.
-      // Since it didn't throw a network error, we can safely assume the POST request reached Google.
-      setSubmitting(false);
-      setSuccess(true);
-      
     } catch (error: any) {
       console.error('Error saving to Google Sheets:', error);
       alert(`Error booking session: ${error.message || 'Unknown error'}`);
